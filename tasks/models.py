@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Task(models.Model):
     STATUS_PENDING = "Pending"
@@ -16,6 +17,7 @@ class Task(models.Model):
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING
     )
+    due_date = models.DateField(default=timezone.localdate)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
