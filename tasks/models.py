@@ -1,27 +1,39 @@
 from django.db import models
-from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 
-class Task(models.Model):
-    STATUS_PENDING = "Pending"
-    STATUS_IN_PROGRESS = "In Progress"
-    STATUS_COMPLETED = "Completed"
 
-    STATUS_CHOICES = (
-        (STATUS_PENDING, "Pending"),
-        (STATUS_IN_PROGRESS, "In Progress"),
-        (STATUS_COMPLETED, "Completed"),
-    )
+# Custom User model — required because settings.py sets AUTH_USER_MODEL = "tasks.User"
+class User(AbstractUser):
+    email = models.EmailField(unique=True)
 
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING
-    )
-    due_date = models.DateField(default=timezone.localdate)
+    def __str__(self):
+        return self.username
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ["-created_at"]
+    def __str__(self):
+        return f"Profile({self.user.username})"
 
-    def __str__(self) -> str:
-        return self.title
+
+class Task(models.Model):
+    STATUS_CHOICES = [
+        ('todo',        'To Do'),
+        ('in_progress', 'In Progress'),
+        ('done',        'Done'),
+    ]
+
+    owner       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
+    title       = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    status      = models.CharField(max_length=20, choices=STATUS_CHOICES, default='todo')
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.title} [{self.owner.username}]"
