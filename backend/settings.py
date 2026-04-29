@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',   # ← ADDED: needed for Token auth
     'tasks',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
