@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',   # ← ADDED: needed for Token auth
+    'rest_framework.authtoken',   
     'tasks',
     
 ]
@@ -99,6 +99,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://localhost:5173",
+]
+CORS_ALLOWED_ORIGINS = [
+ "https://taskmanagement-frontend-1.onrender.com",
+]
+ALLOWED_HOSTS = [
+"taskmanagement-backend-ykcq.onrender.com"
 ]
 CORS_ALLOW_CREDENTIALS = True
 if os.environ.get("CORS_ALLOWED_ORIGINS"):
